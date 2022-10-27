@@ -8,6 +8,10 @@ import { ConfigModule } from '@nestjs/config';
 import { getConfig } from './utils';
 import { LoggerModule } from 'nestjs-pino';
 import { pinoHttpOption } from './common/logger/logger.provider';
+import { PermissionsModule } from './modules/permissions/permissions.module';
+import { RolesModule } from './modules/roles/roles.module';
+import { GroupsModule } from './modules/groups/groups.module';
+import { PermissionMenuModule } from './modules/permission-menu/permission-menu.module';
 @Module({
   imports: [
     AdminUsersModule,
@@ -19,6 +23,10 @@ import { pinoHttpOption } from './common/logger/logger.provider';
       isGlobal: true,
       load: [getConfig],
     }),
+    PermissionsModule,
+    RolesModule,
+    GroupsModule,
+    PermissionMenuModule,
   ],
   controllers: [AppController],
   providers: [
