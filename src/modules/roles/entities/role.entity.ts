@@ -6,9 +6,9 @@ import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
 export class Role extends CommonEntity {
   @Column()
   name: string;
-  @Column()
+  @Column({ nullable: true })
   desc: string;
-  @Column()
+  @Column({ nullable: true })
   parentId: number;
   @ManyToMany(() => Permission)
   @JoinTable()

@@ -6,7 +6,7 @@ import { Column, Entity, OneToMany } from 'typeorm';
 export class Permission extends CommonEntity {
   @Column()
   name: string;
-  @Column()
+  @Column({ nullable: true })
   desc: string;
   @Column()
   type: string;

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { Repository } from 'typeorm';
@@ -16,19 +16,29 @@ export class AdminUsersService {
     return r;
   }
 
-  findAll() {
-    return `This action returns all adminUsers1`;
+  async findAll() {
+    const list = await this.adminUserRepository.find();
+    list.forEach((v) => {
+      delete v.password;
+    });
+    return list;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} adminUser`;
   }
 
-  update(id: number, updateAdminUserDto: UpdateAdminUserDto) {
-    return `This action updates a #${id} adminUser`;
+  async update(id: number, updateAdminUserDto: UpdateAdminUserDto) {
+    updateAdminUserDto.id = id;
+    const item = await this.adminUserRepository.findOneBy({ id: id });
+    if (item) {
+      return this.adminUserRepository.update(id, updateAdminUserDto);
+    } else {
+      throw new ConflictException('Entity not found');
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} adminUser`;
+    return this.adminUserRepository.delete(id);
   }
 }
