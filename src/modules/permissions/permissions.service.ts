@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
@@ -18,18 +18,24 @@ export class PermissionsService {
   }
 
   findAll() {
-    return `This action returns all permissions`;
+    return this.permissionRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} permission`;
+    return this.permissionRepository.findBy({ id: id });
   }
 
-  update(id: number, updatePermissionDto: UpdatePermissionDto) {
-    return `This action updates a #${id} permission`;
+  async update(id: number, updatePermissionDto: UpdatePermissionDto) {
+    updatePermissionDto.id = id;
+    const item = await this.permissionRepository.findOneBy({ id: id });
+    if (item) {
+      return this.permissionRepository.update(id, updatePermissionDto);
+    } else {
+      throw new NotFoundException('Entity not found');
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} permission`;
+    return this.permissionRepository.delete(id);
   }
 }

@@ -1,26 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { CreatePermissionMenuDto } from './dto/create-permission-menu.dto';
 import { UpdatePermissionMenuDto } from './dto/update-permission-menu.dto';
+import { PermissionMenu } from './entities/permission-menu.entity';
 
 @Injectable()
 export class PermissionMenuService {
-  create(createPermissionMenuDto: CreatePermissionMenuDto) {
-    return 'This action adds a new permissionMenu';
+  constructor(
+    @Inject('PERMISSION_MENU_REPOSITORY')
+    private permissionMenuRepository: Repository<PermissionMenu>,
+  ) {}
+  async create(createPermissionMenuDto: CreatePermissionMenuDto) {
+    const entity = this.permissionMenuRepository.create(
+      createPermissionMenuDto,
+    );
+    const r = await this.permissionMenuRepository.save(entity);
+    return r;
   }
 
+  async addChild(id: number, parentId: number) {}
+
   findAll() {
-    return `This action returns all permissionMenu`;
+    return this.permissionMenuRepository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} permissionMenu`;
+    return this.permissionMenuRepository.findBy({ id });
   }
 
-  update(id: number, updatePermissionMenuDto: UpdatePermissionMenuDto) {
-    return `This action updates a #${id} permissionMenu`;
+  async update(id: number, updatePermissionMenuDto: UpdatePermissionMenuDto) {
+    updatePermissionMenuDto.id = id;
+    const item = await this.permissionMenuRepository.findOneBy({ id: id });
+    if (item) {
+      return this.permissionMenuRepository.update(id, updatePermissionMenuDto);
+    } else {
+      throw new NotFoundException('Entity not found');
+    }
   }
 
   remove(id: number) {
-    return `This action removes a #${id} permissionMenu`;
+    return this.permissionMenuRepository.delete(id);
   }
 }

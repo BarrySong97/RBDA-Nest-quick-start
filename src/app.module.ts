@@ -12,6 +12,7 @@ import { PermissionsModule } from './modules/permissions/permissions.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { GroupsModule } from './modules/groups/groups.module';
 import { PermissionMenuModule } from './modules/permission-menu/permission-menu.module';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     AdminUsersModule,
@@ -27,6 +28,7 @@ import { PermissionMenuModule } from './modules/permission-menu/permission-menu.
     RolesModule,
     GroupsModule,
     PermissionMenuModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

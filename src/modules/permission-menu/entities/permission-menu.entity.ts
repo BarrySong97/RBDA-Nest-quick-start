@@ -7,8 +7,8 @@ export class PermissionMenu extends CommonEntity {
   @Column()
   desc: string;
   @Column()
-  url: string;
-  @Column()
+  path: string;
+  @Column({ nullable: true })
   parentId: string;
   @Column()
   name: string;
