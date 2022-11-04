@@ -28,6 +28,10 @@ export class AdminUsersService {
     return `This action returns a #${id} adminUser`;
   }
 
+  findByNameAndPassword(username: string, password: string) {
+    return this.adminUserRepository.findOneBy({ username, password });
+  }
+
   async update(id: number, updateAdminUserDto: UpdateAdminUserDto) {
     updateAdminUserDto.id = id;
     const item = await this.adminUserRepository.findOneBy({ id: id });

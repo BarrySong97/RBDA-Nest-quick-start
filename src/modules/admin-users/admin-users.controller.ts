@@ -6,15 +6,24 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AdminUsersService } from './admin-users.service';
 import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { AdminUserDto } from './dto/response.admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 @ApiTags('adminUser')
+@ApiBearerAuth()
 @Controller('admin-users')
+@UseGuards(JwtAuthGuard)
 export class AdminUsersController {
   constructor(
     private readonly adminUsersService: AdminUsersService,

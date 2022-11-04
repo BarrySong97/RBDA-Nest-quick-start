@@ -8,5 +8,6 @@ import { AdminUserProvider } from './adminUser.provider';
   imports: [DatabaseModule],
   controllers: [AdminUsersController],
   providers: [AdminUsersService, ...AdminUserProvider],
+  exports: [AdminUsersService],
 })
 export class AdminUsersModule {}
