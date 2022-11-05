@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, TreeRepository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './entities/role.entity';
@@ -8,27 +8,46 @@ import { Role } from './entities/role.entity';
 export class RolesService {
   constructor(
     @Inject('ROLE_REPOSITORY')
-    private roleRepository: Repository<Role>,
+    private roleRepository: TreeRepository<Role>,
   ) {}
-  create(createRoleDto: CreateRoleDto) {
-    return this.roleRepository.save(createRoleDto);
+  async create(createRoleDto: CreateRoleDto) {
+    const parentId = createRoleDto.parentId;
+    const newRole = await this.roleRepository.save(createRoleDto);
+    if (parentId && String(createRoleDto.parentId) !== 'root') {
+      const parent = await this.findOne(parentId);
+      newRole.parent = parent;
+      return this.roleRepository.save(newRole);
+    } else {
+      return newRole;
+    }
   }
 
   findAll() {
-    return this.roleRepository.find();
+    return this.roleRepository.findTrees();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: number) {
+    return this.roleRepository.findOneBy({ id });
   }
 
   async update(id: number, updateRoleDto: UpdateRoleDto) {
-    const item = await this.roleRepository.findOneBy({ id: id });
-    if (item) {
-      return this.roleRepository.update(id, updateRoleDto);
-    } else {
-      throw new ConflictException('Entity not found');
+    const updateRole = await this.roleRepository.save(updateRoleDto);
+    // if get new parent, rebind their relation
+    if (
+      updateRole.parentId &&
+      updateRole.parent?.id !== updateRoleDto.parentId
+    ) {
+      // change node to root
+      if (String(updateRoleDto.parentId) === 'root') {
+        updateRole.parent = null;
+        this.roleRepository.save(updateRole);
+      } else {
+        const parent = await this.findOne(updateRoleDto.parentId);
+        updateRole.parent = parent;
+        this.roleRepository.save(updateRole);
+      }
     }
+    return updateRole;
   }
 
   remove(id: number) {

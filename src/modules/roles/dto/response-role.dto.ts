@@ -8,4 +8,6 @@ export class RoleDto extends CommonDto {
   desc: string;
   @ApiProperty({ example: 123 })
   parentId: number;
+  @ApiProperty({ type: RoleDto, isArray: true })
+  children: RoleDto[];
 }

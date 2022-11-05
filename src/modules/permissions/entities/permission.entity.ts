@@ -10,6 +10,4 @@ export class Permission extends CommonEntity {
   desc: string;
   @Column({ nullable: true })
   type: string;
-  @OneToMany(() => PermissionMenu, (pm: PermissionMenu) => pm.permission)
-  menus: PermissionMenu[];
 }

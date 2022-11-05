@@ -5,7 +5,7 @@ export const PermissionMenuProvider = [
   {
     provide: 'PERMISSION_MENU_REPOSITORY',
     useFactory: (AppDataSource: DataSource) =>
-      AppDataSource.getRepository(PermissionMenu),
+      AppDataSource.getTreeRepository(PermissionMenu),
     inject: ['MYSQL_DATA_SOURCE'],
   },
 ];

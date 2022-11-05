@@ -5,7 +5,7 @@ export const RoleProvider = [
   {
     provide: 'ROLE_REPOSITORY',
     useFactory: (AppDataSource: DataSource) =>
-      AppDataSource.getRepository(Role),
+      AppDataSource.getTreeRepository(Role),
     inject: ['MYSQL_DATA_SOURCE'],
   },
 ];

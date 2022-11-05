@@ -8,7 +8,7 @@ export class CreatePermissionMenuDto {
   @ApiProperty()
   url: string;
   @ApiProperty()
-  parentId: string;
+  parentId: number;
   @ApiProperty()
   name: string;
   @ApiProperty()

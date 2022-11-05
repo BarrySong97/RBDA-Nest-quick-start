@@ -23,7 +23,7 @@ import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 @ApiTags('adminUser')
 @ApiBearerAuth()
 @Controller('admin-users')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class AdminUsersController {
   constructor(
     private readonly adminUsersService: AdminUsersService,

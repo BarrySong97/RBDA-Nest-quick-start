@@ -9,8 +9,4 @@ export class AdminUser extends CommonEntity {
 
   @Column()
   password: string;
-
-  @ManyToMany(() => Role)
-  @JoinTable()
-  roles: Role[];
 }

@@ -21,7 +21,7 @@ export class RolesController {
   @Post()
   @ApiResponse({ type: RoleDto, status: 200 })
   @ApiOperation({ description: 'add a role' })
-  create(@Body() createRoleDto: CreateRoleDto): Promise<RoleDto> {
+  create(@Body() createRoleDto: CreateRoleDto) {
     return this.rolesService.create(createRoleDto);
   }
 
@@ -40,7 +40,7 @@ export class RolesController {
   @Patch(':id')
   @ApiResponse({ type: RoleDto, status: 200 })
   @ApiOperation({ description: 'updated a role' })
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+  update(@Param('id') id: number, @Body() updateRoleDto: UpdateRoleDto) {
     return this.rolesService.update(+id, updateRoleDto);
   }
 
