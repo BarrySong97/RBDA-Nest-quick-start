@@ -6,11 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RoleDto } from './dto/response-role.dto';
 
 @Controller('roles')
@@ -28,8 +35,18 @@ export class RolesController {
   @Get()
   @ApiResponse({ type: RoleDto, status: 200, isArray: true })
   @ApiOperation({ description: 'get list of roles' })
-  findAll() {
-    return this.rolesService.findAll();
+  @ApiQuery({
+    name: 'type',
+    enum: ['tree', 'list'],
+    enumName: 'RoleRequestListType',
+    required: false,
+  })
+  findAll(@Query('type') type: 'tree' | 'list' = 'tree') {
+    if (type === 'tree') {
+      return this.rolesService.findAll();
+    } else {
+      return this.rolesService.findFlatList();
+    }
   }
 
   @Get(':id')

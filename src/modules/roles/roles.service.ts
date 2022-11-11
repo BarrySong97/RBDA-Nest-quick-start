@@ -22,8 +22,20 @@ export class RolesService {
     }
   }
 
+  /**
+   *
+   * @returns tree
+   */
   findAll() {
     return this.roleRepository.findTrees();
+  }
+
+  /**
+   *
+   * @returns flat tree list
+   */
+  async findFlatList() {
+    return this.roleRepository.find();
   }
 
   async findOne(id: number) {
