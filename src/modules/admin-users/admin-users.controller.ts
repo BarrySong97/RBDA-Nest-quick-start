@@ -37,9 +37,7 @@ export class AdminUsersController {
     description: 'admin user',
     type: AdminUserDto,
   })
-  create(
-    @Body() createAdminUserDto: CreateAdminUserDto,
-  ): Promise<AdminUserDto> {
+  create(@Body() createAdminUserDto: CreateAdminUserDto) {
     return this.adminUsersService.create(createAdminUserDto);
   }
 
@@ -51,7 +49,7 @@ export class AdminUsersController {
     type: AdminUserDto,
     isArray: true,
   })
-  findAll(): Promise<AdminUserDto[]> {
+  findAll() {
     return this.adminUsersService.findAll();
   }
 
@@ -71,7 +69,7 @@ export class AdminUsersController {
   @ApiResponse({
     status: 200,
     description: 'admin user ',
-    type: CreateAdminUserDto,
+    type: AdminUserDto,
   })
   update(
     @Param('id') id: number,

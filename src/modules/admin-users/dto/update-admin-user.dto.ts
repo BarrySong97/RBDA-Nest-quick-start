@@ -3,4 +3,5 @@ import { CreateAdminUserDto } from './create-admin-user.dto';
 
 export class UpdateAdminUserDto extends PartialType(CreateAdminUserDto) {
   id: number;
+  roleId: number;
 }

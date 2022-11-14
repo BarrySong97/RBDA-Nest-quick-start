@@ -3,12 +3,14 @@ import { CreateAdminUserDto } from './dto/create-admin-user.dto';
 import { UpdateAdminUserDto } from './dto/update-admin-user.dto';
 import { Repository } from 'typeorm';
 import { AdminUser } from './entities/admin-user.entity';
+import { Role } from '../roles/entities/role.entity';
 
 @Injectable()
 export class AdminUsersService {
   constructor(
     @Inject('ADMIN_USER_REPOSITORY')
     private adminUserRepository: Repository<AdminUser>,
+    @Inject('ROLE_REPOSITORY') private RoleService: Repository<Role>,
   ) {}
   async create(createAdminUserDto: CreateAdminUserDto) {
     const entity = this.adminUserRepository.create(createAdminUserDto);
@@ -17,9 +19,10 @@ export class AdminUsersService {
   }
 
   async findAll() {
-    const list = await this.adminUserRepository.find();
-    list.forEach((v) => {
-      delete v.password;
+    const list = await this.adminUserRepository.find({
+      relations: {
+        role: true,
+      },
     });
     return list;
   }
@@ -28,18 +31,29 @@ export class AdminUsersService {
     return `This action returns a #${id} adminUser`;
   }
 
+  async addRole(adminUser: AdminUser, roleId: number) {
+    const role = await this.RoleService.findOneBy({
+      id: roleId,
+    });
+    adminUser.role = role;
+    await this.adminUserRepository.save(adminUser);
+  }
+
   findByNameAndPassword(username: string, password: string) {
     return this.adminUserRepository.findOneBy({ username, password });
   }
 
   async update(id: number, updateAdminUserDto: UpdateAdminUserDto) {
     updateAdminUserDto.id = id;
-    const item = await this.adminUserRepository.findOneBy({ id: id });
-    if (item) {
-      return this.adminUserRepository.update(id, updateAdminUserDto);
-    } else {
-      throw new ConflictException('Entity not found');
+    const adminUser = await this.adminUserRepository.findOneBy({ id: id });
+    if (
+      updateAdminUserDto.roleId &&
+      (!adminUser.role || adminUser.role.id !== updateAdminUserDto.roleId)
+    ) {
+      await this.addRole(adminUser, updateAdminUserDto.roleId);
     }
+    delete updateAdminUserDto.roleId;
+    return this.adminUserRepository.update(id, updateAdminUserDto);
   }
 
   remove(id: number) {
